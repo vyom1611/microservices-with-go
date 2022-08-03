@@ -16,14 +16,11 @@ var bindAddress = env.String("BIND_ADDRESS", false, ":9090", "Bind address for t
 
 func main() {
 	env.Parse()
-	
 
 	l := log.New(os.Stdout, "products-api ", log.LstdFlags)
 
-	
 	//Creating the handlers
 	productsHandler := handlers.NewProducts(l)
-
 
 	//Creating new serve mux and registering the handlers
 	serveMux := http.NewServeMux()
@@ -32,7 +29,7 @@ func main() {
 	// create a new server
 	s := http.Server{
 		Addr:         *bindAddress,      // configure the bind address
-		Handler:      serveMux,                // set the default handler
+		Handler:      serveMux,          // set the default handler
 		ErrorLog:     l,                 // set the logger for the server
 		ReadTimeout:  5 * time.Second,   // max time to read request from the client
 		WriteTimeout: 10 * time.Second,  // max time to write response to the client
@@ -50,7 +47,6 @@ func main() {
 		}
 	}()
 
-	
 	// trap sigterm or interupt and gracefully shutdown the server
 	channel := make(chan os.Signal, 1)
 	signal.Notify(channel, os.Interrupt)

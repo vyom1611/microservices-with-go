@@ -11,10 +11,9 @@ type Products struct {
 	l *log.Logger
 }
 
-func NewProducts(l*log.Logger) *Products {
+func NewProducts(l *log.Logger) *Products {
 	return &Products{l}
 }
-
 
 //Defining CRUD methods for API
 //ServeHTTP is the main entry point for handler
@@ -30,7 +29,13 @@ func (p *Products) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		p.addProduct(w, r)
 		return
 	}
-	
+
+	//PUT
+	if r.Method == http.MethodPut {
+		//Expect the id in the URI
+		p := r.URL.Path
+
+	}
 
 	//Catch all - if not methods is defined
 	w.WriteHeader(http.StatusMethodNotAllowed)
@@ -43,7 +48,7 @@ func (p *Products) getProducts(w http.ResponseWriter, r *http.Request) {
 	//Fetching the data
 	lp := data.GetProducts()
 
-	//Serializing data to json 
+	//Serializing data to json
 	err := lp.ToJson(w)
 	if err != nil {
 		http.Error(w, "Unable to convert to json", http.StatusInternalServerError)

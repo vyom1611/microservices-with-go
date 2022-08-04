@@ -2,6 +2,7 @@ package data
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"time"
 )
@@ -16,6 +17,8 @@ type Product struct {
 	UpdatedOn   string  `json:"-"`
 	DeletedOn   string  `json:"-"`
 }
+
+var ErrProductNotFound = fmt.Errorf("Product not found")
 
 type Products []*Product
 
@@ -37,6 +40,26 @@ func AddProduct(p *Product) {
 // Calling a slice of products to a http request
 func GetProducts() Products {
 	return productList
+}
+
+func UpdateProduct(id int, p *Product) error {
+	fp, pos, err := findProduct(id)
+	if err != nil {
+		return err
+	}
+
+	p.ID = id
+	productList[pos] = p
+}
+
+func findProduct(id int) (*Product, int, error) {
+	for i, p := range productList {
+		if p.ID == id {
+			return p, i, nil
+		}
+	}
+
+	return nil, ErrProductNotFound
 }
 
 //Fake id creation
